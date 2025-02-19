@@ -1,0 +1,194 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block main_content %}
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    h1,h2 {
+      text-align: center;
+      margin-top: 30px;
+      color: rgb(89, 131, 167);
+    }
+
+    .container {
+      margin-top: 20px;
+    }
+
+    .table {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+    }
+
+    .table th,
+    .table td {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .table th {
+      background-color: rgb(89, 131, 167);
+      color: white;
+      font-weight: bold;
+    }
+
+    .table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .table tr:hover {
+      background-color: #f0f8ff;
+    }
+
+    .btn {
+      padding: 8px 15px;
+      margin: 5px;
+      border-radius: 5px;
+    }
+
+    .btn-outline-warning {
+      color: #ffc107;
+      border-color: #ffc107;
+    }
+
+    .btn-outline-warning:hover {
+      background-color: #ffc107;
+      color: white;
+    }
+
+    .btn-outline-danger {
+      color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-success {
+      color: white;
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+
+    .btn-success:hover {
+      background-color: #218838;
+    }
+
+    .btn-danger {
+      color: white;
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .table-container {
+      overflow-y: auto;
+      max-height: 500px;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+  </style>
+
+  <h1>Your Favorite Books in your favourite place!!</h1>
+
+  <div class="container table-container">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Book ID</th>
+          <th>Book Name</th>
+          <th>Author</th>
+          <th>Type</th>
+          <th>Availability</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in favorite_books %}
+        <tr>
+          <td>{{ book.0 }}</td>
+          <td>{{ book.1 }}</td>
+          <td>{{ book.2 }}</td>
+          <td>{{ book.3 }}</td>
+          <td>
+            {% if book.4 %}
+            <span class="btn btn-success">Available</span>
+            {% else %}
+            <span class="btn btn-danger">Not Available</span>
+            {% endif %}
+          </td>
+          <td>
+            <form action="{% url 'remove_from_favorites' book.0 %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger">Remove from Favorites</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Suggested Books Based on Your Favorites</h2>
+
+  <div class="container table-container">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Book ID</th>
+          <th>Book Name</th>
+          <th>Author</th>
+          <th>Type</th>
+          <th>Availability</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in suggested_books %}
+        <tr>
+          <td>{{ book.book_id }}</td>
+          <td>{{ book.book_name }}</td>
+          <td>{{ book.book_author }}</td>
+          <td>{{ book.book_type }}</td>
+          <td>
+            {% if book.available %}
+            <span class="btn btn-success">Available</span>
+            {% else %}
+            <span class="btn btn-danger">Not Available</span>
+            {% endif %}
+          </td>
+          <td>
+            <form action="{% url 'add_to_favorites' book.book_id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-warning">Add to Favorites</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center">No suggestions available</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

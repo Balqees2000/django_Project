@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% extends "index.html" %}
+{% load static %}
+
+
+{% block main_content %}
+<main role="main">
+<div class="jumbotron">
+    <div class="container">
+        <img src="{% static '/image.png' %}" class="float-start" alt="Logo" height="80" style="margin-right: 14px;">
+        <h1 class="display-4" style="color: aliceblue; margin-left: 10px;">Welcome Folks Readers!</h1>
+        <p style="color:aliceblue">Welcome to Moonlight library, your gateway to knowledge, discovery, and community! Whether you're here to explore our vast collection of books, access digital resources, or participate in engaging events, we are committed to fostering a love for learning and literacy. Our library is a space for everyone—students, researchers, book lovers, and curious minds alike. Visit us in person or online to embark on a journey of endless possibilities. Welcome, and happy reading!</p>
+        <button type="button" class="btn btn-outline-primary btn-lg" style="color: aliceblue; border-color: aliceblue; transition: background-color 0.3s, color 0.3s;" onmouseover="this.style.backgroundColor='aliceblue'; this.style.color='black'; this.style.borderColor='aliceblue';" onmouseout="this.style.backgroundColor=''; this.style.color='aliceblue'; this.style.borderColor='aliceblue';">Browse our latest books here >></button>
+
+    </div>
+</div>
+
+<div class="container text-center">
+    <div class="row">
+      <div class="col">
+        <h2 style="color:rgb(130, 156, 179)">About Our Library</h2>
+        <p>A place where stories come to life under the glow of the moon. 
+            Our library offers a serene and magical atmosphere that inspires readers of all ages to embark on incredible journeys through books, knowledge, and imagination. Whether you're in search of the latest bestsellers, timeless classics, or hidden gems, you'll find a world waiting to be explored.
+        </p>
+      </div>
+      
+      <div class="col">
+        <h2 style="color:rgb(130, 156, 179)">Qoute of the Day!</h2>
+        <p>"The only limit to our realization of tomorrow is our doubts of today." – Franklin D. Roosevelt</p>
+      </div>
+    </div>
+  </div>
+  <hr style="width:90%; margin-left:60px">
+</main>  
+
+  <footer class="container">
+    <p style="color:rgb(64, 97, 126)">@ Moonlight Library 2025</p>
+
+  </footer>
+
+{% endblock %}

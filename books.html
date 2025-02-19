@@ -1,0 +1,165 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block main_content %}
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                // Loop through all message elements and fade them out
+                var messageElements = document.querySelectorAll('.messages .alert');
+                messageElements.forEach(function(element) {
+                    element.style.transition = "opacity 1s ease-out";
+                    element.style.opacity = 0; 
+                    setTimeout(function() {
+                        element.style.display = "none";  
+                    }, 1000);  
+                });
+            }, 3000); 
+        });
+    </script>
+{% endif %}
+
+<div class="container-flex text-center justify-content-center align-items-center" style="padding-top: 10px; vertical-align: middle;">
+    <div class="row justify-content-center align-middle" style="height: 60px;">
+        <div class="col-md-4" style="background-color:aliceblue;">
+            <h4 style="margin-top: 15px; color:rgb(89, 131, 167)">Add a New Book</h4>
+        </div>
+        <div class="col-md-8">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="container shadow-sm bg-body-tertiary rounded" style="overflow-y: auto; height: 350px; width:500px;">
+            <form class="d-flex" action="/books/add" method="POST">
+                {% csrf_token %}
+                <table class="table" style="width:700px;">
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Book ID: </td>
+                        <td><input type="text" class="form-control shadow-sm bg-body-tertiary rounded" name="book_id" required></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Book Name: </td>
+                        <td><input type="text" class="form-control shadow-sm bg-body-tertiary rounded" name="book_name" required></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Author: </td>
+                        <td><input type="text" class="form-control shadow-sm bg-body-tertiary rounded" name="book_author" required></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Type: </td>
+                        <td><input type="text" class="form-control shadow-sm bg-body-tertiary rounded" name="book_type" required></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Available: </td>
+                        <td>
+                            <input type="checkbox" class="form-check-input" name="available">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="btn btn-outline-success" type="submit" style="margin-left: 170px; background-color:rgb(230, 233, 235)">Add Book</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="row">
+            <h4 id="welcome-text" class="container-flex text-center justify-content-center align-items-center" style="color: rgb(89, 131, 167); text-transform: unset; opacity: 0; transition: opacity 2s;" >Search by Title or Author Name</h4>
+            <nav class="navbar bg-body-light">
+                <div class="container-fluid justify-content-center align-items-center">
+                    <form class="d-flex" role="search" action="/books" method="POST">
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="search" placeholder="Search for a book" aria-label="Search" name="query" value="{{ query }}">
+                        <button class="btn btn-outline-success" type="submit" style="background-color:rgb(230, 233, 235)">Search</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+        <script>
+            window.onload = function() {
+                document.getElementById("welcome-text").style.opacity = "5";
+            };
+        </script>
+        
+        <div class="row" style="margin-top: 20px; margin-left: 400px;">
+            <p style="color: green;">{{ book_list|length }} books available!</p>
+        </div>
+
+        <div class="row" style="margin-top: 20px;">
+            <div class="container" style="overflow-y: auto; height: 400px;">
+                <table class="table table-hover">
+                   <thead>
+                    <tr>
+                        <td>Book ID</td>
+                        <td>Book Name</td>
+                        <td>Author</td>
+                        <td>Type</td>
+                        <td>Availability</td>
+                    </tr>
+                   </thead>
+                   <tbody>
+                    {% for book in book_list %}
+                        <tr>
+                            <td>{{ book.book_id }}</td>
+                            <td>{{ book.book_name }}</td>
+                            <td>{{ book.book_author }}</td>
+                            <td>{{ book.book_type }}</td>
+                            <td>
+                                {% if book.available %}
+                                    <span class="btn btn-success">Available</span>
+                                {% else %}
+                                    <span class="btn btn-danger">Not Available</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form action="{% url 'add_to_favorites' book.book_id %}" method="POST">
+                                    {% csrf_token %}
+                                    {% if book.book_id in user_favorites %}
+                                        <button type="button" class="btn btn-success">Added to Favorites</button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-outline-warning">Add to Favorites</button>
+                                    {% endif %}
+                                </form>
+                            </td>     
+                            <td>
+                                {% if book.book_id in user_favorites %}
+                                    <form action="{% url 'remove_from_favorites' book.book_id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger">Remove</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                                                   
+                            
+                            <td>
+                                <!-- Remove from favorites button (show only if already in favorites) -->
+                                {% if book in user_favorites %}
+                                    <form action="{% url 'remove_from_favorites' book.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger">Remove from Favorites</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                   </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+{% extends "index.html" %}
+{% load static %}
+
+
+{% block main_content %}
+
+<div class="container-flex text-center justify-content-center align-items-center" style=" padding-top: 10px; vertical-align: middle;">
+    <div class="row justify-content-center align-middle" style="height: 60px;">
+        <div class="col-md-4" style="background-color:aliceblue;">
+            <h4 style="margin-top: 15px; color:rgb(89, 131, 167)">Register a new reader</h4>
+
+        </div>
+        <div class="col-md-8">
+
+        </div>
+    </div>
+</div>
+ <div class="row">
+    <!-- to keep it 30% width of the container -->
+    <div class="col-md-4">
+        <div class="container shadow-sm bg-body-tertiary rounded" style="overflow-y: auto; height: 420px; width:500px;">
+            <form class="d-flex" action="/readers/add" method="POST">
+                {% csrf_token %}
+                <table class="table" style="width:700px;">
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Name: </td>
+                        <td><input type="text" class="form-control shadow-sm bg-body-tertiary rounded" name="reader_name"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Password: </td>
+                        <td><input type="password" class="form-control shadow-sm bg-body-tertiary rounded" name="reader_password"></td>
+                    </tr>                    
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Contact: </td>
+                        <td><input type="text" class="form-control shadow-sm bg-body-tertiary rounded" name="readers_contact"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Reference Id: </td>
+                        <td><input type="text" class="form-control shadow-sm bg-body-tertiary rounded" name="reader_ref_id"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; padding-left: 15px;">Address: </td>
+                        <td><textarea class="form-control shadow-sm bg-body-tertiary rounded" name="reader_address"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="btn btn-outline-success" type="submit" style="margin-left: 170px; background-color:rgb(230, 233, 235) ">Register</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <p style="margin-left: 90px; color: rgb(119, 122, 124);">
+                Already have an account? 
+                <a href="/login" style="color: rgb(89, 131, 167); text-decoration: underline;">
+                  login here
+                </a>
+              </p>              
+             </div>
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            <nav class="navbar bg-body-light">
+                <div class="container-fluid justify-content-center align-items-center">
+                    <!-- the input given inside the form will be going to the url specified in the actions section -->
+                    <form class="d-flex" role="search" action="/readers" method="POST">
+                        <!-- to avoid csrf token validation errors -->
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query" value="{{query}}">
+                        <button class="btn btn-outline-success" type="submit" style="background-color:rgb(230, 233, 235) ">Search</button>
+                      </form>
+                </div>
+            </nav>
+        </div>
+        <div class="row" style="margin-top: 20px; margin-left: 370px;">
+            <p>{{readers|length}} folks readers subscribed!!</p>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="container" style="overflow-y: auto; height: 400px;">
+                <table class="table table-hover">
+                   <thead>
+                    <tr>
+                        <td>Reader Id</td>
+                        <td>Name</td>
+                        <td>Contact</td>
+                        <td>Reference Id</td>
+                        <td>Address</td>
+                    </tr>
+                   </thead>
+                   <tbody>
+                    <!-- loop to iterate on each reader -->
+                    {% for reader in readers %}
+                        <tr>
+                            <td>{{reader.id}}</td>
+                            <td>
+                                {% if reader.active %}
+                                    <span class="btn btn-success">{{reader.reader_name}}</span>
+                                {% else %}    
+                                <span class="btn btn-secondary">{{reader.reader_name}}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{reader.readers_contact}}
+                            </td>
+                            <td>
+                                {{reader.reference_id}}
+                            </td>
+                            <td>  {{reader.reader_address}}</td>
+                        </tr>
+                    {% endfor %}
+                   </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+ </div>
+
+{% endblock %}

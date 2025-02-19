@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ <meta charset="UTF-8">
+ <title>Library Managment System</title>
+</head>
+
+<body>
+<h1>Welcome to my fantastic Library!!</h1>
+<form method="POST" action="/save">
+    <!-- Django has many built-in security measures to protect the website and data -->
+    <!-- This will add in the csrf token in the request going from html to our backend function -->
+    {% csrf_token %}
+   
+   
+    <!-- display block is used to show button in next line without using br tag -->
+
+    <table>
+        <tbody>
+            <tr> 
+                <td> <label>Customer Name</label> </td>
+                <td> <input type="text" name="customer_name"> </td>
+            </tr>
+            <tr>
+                <td> <label>Customer Age</label> </td>
+                <td> <input type="text" name="customer_age"> </td>
+            </tr>
+            <tr>
+            <td colspan="2"><button type="submit" style="display: block; margin-top: 15px; margin-bottom: 15px; border-color: aliceblue;border-radius: 5px; font-size: 15px;">Save</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+</form>
+<a href="/shopping">Shopping page</a>
+</body>
+</html>
